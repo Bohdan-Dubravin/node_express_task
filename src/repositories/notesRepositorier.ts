@@ -1,8 +1,8 @@
-import notes from "../data/data";
-import { findDates, getFullDate, getSummaryes } from "../helpers/helpers";
-import NewNote from "../types/NewNote";
-import Note from "../types/Note";
-import UpdateNote from "../types/UpdateNote";
+import notes from '../data/data';
+import { findDates, getFullDate, getSummaryes } from '../helpers/helpers';
+import NewNote from '../types/NewNote';
+import Note from '../types/Note';
+import UpdateNote from '../types/UpdateNote';
 
 const notesList: { notes: Note[] } = { notes };
 
@@ -14,7 +14,7 @@ const notesRepository = {
     const note = notesList.notes.find((note) => note.id === +id);
 
     if (!note) {
-      throw new Error("Note not found");
+      throw new Error('Note not found');
     }
 
     return note;
@@ -22,7 +22,7 @@ const notesRepository = {
   createNewNote: (note: NewNote) => {
     const id = +new Date();
     const creationDate = getFullDate();
-    const dates = findDates(note.content) || "";
+    const dates = findDates(note.content) || '';
     const active = true;
     const newNote = { ...note, creationDate, dates, id, active };
 
@@ -32,7 +32,7 @@ const notesRepository = {
   updateNote: (oldNote: UpdateNote, noteId: string) => {
     const findNote = notesList.notes.find((item) => item.id === +noteId);
     if (!findNote) {
-      throw new Error("Note not found");
+      throw new Error('Note not found');
     }
 
     const dates = findDates(oldNote.content);
@@ -50,7 +50,7 @@ const notesRepository = {
   changeNoteStatus: (id: number) => {
     const findNote = notesList.notes.find((item) => item.id === id);
     if (!findNote) {
-      throw new Error("Note not found");
+      throw new Error('Note not found');
     }
 
     notesList.notes = notesList.notes.map((note) => {
@@ -65,11 +65,10 @@ const notesRepository = {
     const removedNote = notesList.notes.find((note) => note.id === +id);
 
     if (!removedNote) {
-      throw new Error("Note not found");
+      throw new Error('Note not found');
     }
 
     notesList.notes = notesList.notes.filter((note) => note.id !== +id);
-    console.log(notesList.notes);
     return removedNote;
   },
   getSummary: () => {

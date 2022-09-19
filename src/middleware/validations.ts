@@ -1,5 +1,5 @@
-import express from "express";
-import { IdSchema, NoteSchema, UpdateNoteSchema } from "../schema/noteSchema";
+import express from 'express';
+import { IdSchema, NoteSchema, UpdateNoteSchema } from '../schema/noteSchema';
 
 export const validateNote =
   (schema: NoteSchema) =>
@@ -25,6 +25,21 @@ export const validateUpdateNote =
   ) => {
     try {
       await schema.validate(req.body);
+      await idSchema.validate(req.params);
+      next();
+    } catch (error) {
+      return res.status(400).json({ error });
+    }
+  };
+
+export const validateParamId =
+  (idSchema: IdSchema) =>
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
       await idSchema.validate(req.params);
       next();
     } catch (error) {
