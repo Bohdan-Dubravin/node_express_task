@@ -1,7 +1,7 @@
 import express from 'express';
 import router from './routes/notesRoute';
 
-const port = process.env.Port || 3001;
+const port = process.env.PORT || 3001;
 
 const app = express();
 app.use(express.json());
