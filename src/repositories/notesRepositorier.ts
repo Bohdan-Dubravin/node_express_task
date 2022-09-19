@@ -27,7 +27,7 @@ const notesListSlice = {
     });
     return updateNote;
   },
-  archiveNote: (state, action: PayloadAction<number>) => {
+  archiveNote: () => {
     state.notesList = state.notesList.map((note) => {
       if (note.id === action.payload) {
         return { ...note, active: true };
