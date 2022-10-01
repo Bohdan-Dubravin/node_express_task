@@ -1,32 +1,41 @@
 import notes from '../data/data';
-import { findDates, getFullDate, getSummaryes } from '../helpers/helpers';
+import { findDates, getFullDate, getSummaries } from '../helpers/helpers';
 import NewNote from '../types/NewNote';
 import Note from '../types/Note';
 import UpdateNote from '../types/UpdateNote';
+import pool from '../db';
 
 const notesList: { notes: Note[] } = { notes };
 
 const notesRepository = {
-  getAllNotes: () => {
-    return notesList.notes;
-  },
-  getOneNote: (id: string) => {
-    const note = notesList.notes.find((note) => note.id === +id);
+  getAllNotes: async () => {
+    const note = await pool.query('SELECT * FROM note');
 
-    if (!note) {
+    if (!note.rowCount) {
+      throw new Error('Notes not found');
+    }
+
+    return note.rows;
+  },
+  getOneNote: async (id: string) => {
+    const note = await pool.query('SELECT * FROM note WHERE id = $1', [id]);
+    if (!note.rowCount) {
       throw new Error('Note not found');
     }
 
-    return note;
+    return note.rows[0];
   },
-  createNewNote: (note: NewNote) => {
-    const id = +new Date();
-    const creationDate = getFullDate();
+  createNewNote: async (note: NewNote) => {
+    const created_at = getFullDate();
     const dates = findDates(note.content) || '';
     const active = true;
-    const newNote = { ...note, creationDate, dates, id, active };
+    const { name, category, content } = note;
 
-    notesList.notes = [...notesList.notes, newNote];
+    const newNote = await pool.query(
+      'INSERT INTO note (name, category, content, created_at, dates, active) VALUES ($1, $2, $3, $4, $5, $6)',
+      [name, category, content, created_at, dates, active]
+    );
+
     return newNote;
   },
   updateNote: (oldNote: UpdateNote, noteId: string) => {
@@ -61,18 +70,19 @@ const notesRepository = {
       }
     });
   },
-  deleteNote: (id: string) => {
-    const removedNote = notesList.notes.find((note) => note.id === +id);
+  deleteNote: async (id: string) => {
+    const removedNote = await pool.query('DELETE FROM note WHERE id = $1', [
+      id,
+    ]);
 
-    if (!removedNote) {
+    if (!removedNote.rowCount) {
       throw new Error('Note not found');
     }
 
-    notesList.notes = notesList.notes.filter((note) => note.id !== +id);
     return removedNote;
   },
   getSummary: () => {
-    const summary = getSummaryes(notesList.notes);
+    const summary = getSummaries(notesList.notes);
     return summary;
   },
 };

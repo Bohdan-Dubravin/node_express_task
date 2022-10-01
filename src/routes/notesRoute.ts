@@ -11,7 +11,7 @@ const router: express.Router = express.Router();
 
 router.get('/notes', notesService.getAll);
 router.get('/notes/:id', notesService.findOne);
-router.get('/stats', notesService.getStats);
+router.get('/notes/stats', notesService.getStats);
 router.post('/notes', validateNote(noteSchema), notesService.create);
 router.patch(
   '/notes/:id',

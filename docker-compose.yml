@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  server:
+    build: .
+    ports:
+      - '3001:3001'
+  db:
+    build:
+      dockerfile: db.Dockerfile
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: '888534qz'
+      POSTGRES_USER: 'postgres'

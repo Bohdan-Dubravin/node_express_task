@@ -16,7 +16,7 @@ export const findDates = (str: string) => {
   return dates.toString() || '';
 };
 
-export const getSummaryes = (arr: Note[]) => {
+export const getSummaries = (arr: Note[]) => {
   const summary = arr.reduce<Summary[]>((acc, note) => {
     const category = acc.find((cat) => cat.categoryName === note.category);
     if (!category) {

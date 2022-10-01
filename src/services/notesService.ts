@@ -1,24 +1,24 @@
-import express from "express";
-import notesRepository from "../repositories/notesRepositorier";
+import express from 'express';
+import notesRepository from '../repositories/notesRepositories';
 
 const notesService = {
   getAll: async (req: express.Request, res: express.Response) => {
     try {
-      const note = await notesRepository.getAllNotes();
+      const notes = await notesRepository.getAllNotes();
 
-      return res.json(note);
+      res.json(notes);
     } catch (error) {
       const { message } = error as Error;
 
-      return res.status(500).json(message);
+      res.status(500).json(message);
     }
   },
   findOne: async (req: express.Request, res: express.Response) => {
-    const params: string = req.params.id;
-
     try {
-      const note = await notesRepository.getOneNote(params);
-      return res.json(note);
+      const { id } = req.params;
+
+      const todo = await notesRepository.getOneNote(id);
+      res.json(todo);
     } catch (error) {
       const { message } = error as Error;
 
@@ -28,7 +28,7 @@ const notesService = {
   create: async (req: express.Request, res: express.Response) => {
     try {
       const note = await notesRepository.createNewNote(req.body);
-      return res.json(note);
+      return res.json(note.rows[0]);
     } catch (error) {
       const { message } = error as Error;
       return res.status(500).json(message);
